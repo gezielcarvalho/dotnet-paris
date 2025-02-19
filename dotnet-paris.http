@@ -1,0 +1,6 @@
+@dotnet_paris_HostAddress = http://localhost:5155
+
+GET {{dotnet_paris_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
