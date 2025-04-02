@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using DotNetParis.Models;
-using System;
-using System.Linq;
 
 namespace DotNetParis.Controller
 {
