@@ -47,6 +47,17 @@ namespace DotNetParis.Controllers
             return Ok(products);
         }
 
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
+        {
+            var publicProducts = await _service.GetAllPublicProductsAsync();
+            var privateProducts = await _service.GetAllPrivateProductsAsync();
+            var allProducts = new List<Product>();
+            allProducts.AddRange(publicProducts);
+            allProducts.AddRange(privateProducts);
+            return Ok(allProducts);
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateProduct([FromBody] Product product)
         {
