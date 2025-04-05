@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DotNetParis.Data;
 
@@ -14,31 +13,19 @@ namespace DotNetParis.Models
             _context = context;
         }
 
-        public async ValueTask<Product> GetOnePublicProductAsync(int productId)
+        public async ValueTask<Product> GetByIdAsync(int productId)
         {
             await Task.Delay(100); // Simulate async operation
-            return _context.Products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Public"));
+            return _context.Products.FirstOrDefault(p => p.Id == productId);
         }
 
-        public async ValueTask<Product> GetOnePrivateProductAsync(int productId)
+        public async ValueTask<IEnumerable<Product>> GetAllAsync()
         {
             await Task.Delay(100); // Simulate async operation
-            return _context.Products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Private"));
+            return _context.Products;
         }
 
-        public async ValueTask<IEnumerable<Product>> GetAllPublicProductAsync()
-        {
-            await Task.Delay(100); // Simulate async operation
-            return _context.Products.Where(p => p.Name.Contains("Public"));
-        }
-
-        public async ValueTask<IEnumerable<Product>> GetAllPrivateProductAsync()
-        {
-            await Task.Delay(100); // Simulate async operation
-            return _context.Products.Where(p => p.Name.Contains("Private"));
-        }
-
-        public async ValueTask CreateAsync(Product product)
+        public async ValueTask AddAsync(Product product)
         {
             await Task.Delay(100); // Simulate async operation
             _context.Products.Add(product);
@@ -54,7 +41,7 @@ namespace DotNetParis.Models
             }
         }
 
-        public async ValueTask DeleteAsync(Product product)
+        public async ValueTask RemoveAsync(Product product)
         {
             await Task.Delay(100); // Simulate async operation
             _context.Products.Remove(product);
