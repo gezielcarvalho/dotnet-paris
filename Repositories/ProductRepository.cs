@@ -1,53 +1,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetParis.Data;
 
 namespace DotNetParis.Models
 {
     public class ProductRepository
     {
-        private readonly List<Product> _products = new()
+        private readonly ApplicationDbContext _context;
+
+        public ProductRepository(ApplicationDbContext context)
         {
-            new Product(1, "Public Product 1"),
-            new Product(2, "Private Product 1"),
-            new Product(3, "Public Product 2"),
-            new Product(4, "Private Product 2")
-        };
+            _context = context;
+        }
 
         public async ValueTask<Product> GetOnePublicProductAsync(int productId)
         {
             await Task.Delay(100); // Simulate async operation
-            return _products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Public"));
+            return _context.Products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Public"));
         }
 
         public async ValueTask<Product> GetOnePrivateProductAsync(int productId)
         {
             await Task.Delay(100); // Simulate async operation
-            return _products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Private"));
+            return _context.Products.FirstOrDefault(p => p.Id == productId && p.Name.Contains("Private"));
         }
 
         public async ValueTask<IEnumerable<Product>> GetAllPublicProductAsync()
         {
             await Task.Delay(100); // Simulate async operation
-            return _products.Where(p => p.Name.Contains("Public"));
+            return _context.Products.Where(p => p.Name.Contains("Public"));
         }
 
         public async ValueTask<IEnumerable<Product>> GetAllPrivateProductAsync()
         {
             await Task.Delay(100); // Simulate async operation
-            return _products.Where(p => p.Name.Contains("Private"));
+            return _context.Products.Where(p => p.Name.Contains("Private"));
         }
 
         public async ValueTask CreateAsync(Product product)
         {
             await Task.Delay(100); // Simulate async operation
-            _products.Add(product);
+            _context.Products.Add(product);
         }
 
         public async ValueTask UpdateAsync(Product product)
         {
             await Task.Delay(100); // Simulate async operation
-            var existingProduct = _products.FirstOrDefault(p => p.Id == product.Id);
+            var existingProduct = _context.Products.FirstOrDefault(p => p.Id == product.Id);
             if (existingProduct != null)
             {
                 existingProduct.Name = product.Name;
@@ -57,7 +57,7 @@ namespace DotNetParis.Models
         public async ValueTask DeleteAsync(Product product)
         {
             await Task.Delay(100); // Simulate async operation
-            _products.Remove(product);
+            _context.Products.Remove(product);
         }
     }
 }
