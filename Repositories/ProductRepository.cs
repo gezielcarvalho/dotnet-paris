@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DotNetParis.Data;
 
-namespace DotNetParis.Models
+namespace DotNetParis.Repositories
 {
+    using DotNetParis.Models;
+
     public class ProductRepository
     {
         private readonly ApplicationDbContext _context;

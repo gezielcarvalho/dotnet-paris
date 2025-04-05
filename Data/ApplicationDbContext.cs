@@ -1,24 +1,16 @@
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using DotNetParis.Models;
 
 namespace DotNetParis.Data
 {
-    public class ApplicationDbContext : DbContext // Inherit from DbContext
+    public class ApplicationDbContext // Remove inheritance from DbContext
     {
-        public DbSet<Product> Products { get; set; } // Change List<Product> to DbSet<Product>
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public List<Product> Products { get; set; } = new() // Use a simple in-memory list
         {
-            base.OnModelCreating(modelBuilder);
-
-            // Seed initial data
-            modelBuilder.Entity<Product>().HasData(
-                new Product(1, "Public Product 1"),
-                new Product(2, "Private Product 1"),
-                new Product(3, "Public Product 2"),
-                new Product(4, "Private Product 2")
-            );
-        }
+            new Product(1, "Public Product 1"),
+            new Product(2, "Private Product 1"),
+            new Product(3, "Public Product 2"),
+            new Product(4, "Private Product 2")
+        };
     }
 }
