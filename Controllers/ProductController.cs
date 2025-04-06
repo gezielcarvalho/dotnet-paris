@@ -17,22 +17,22 @@ namespace DotNetParis.Controllers
             _service = service;
         }
 
-        [HttpGet("{id}/public")]
-        public async Task<ActionResult<Product>> GetOnePublicProduct(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetOneProduct(int id)
         {
-            var product = await _service.GetOnePublicProductAsync(id);
+            var product = await _service.GetOneProductAsync(id);
             if (product == null) return NotFound();
-            return Ok(product);
+            return Ok(product);  // Can return any subclass of Product (PublicProduct or PrivateProduct)
         }
 
-        [HttpGet("{id}/private")]
-        public async Task<ActionResult<Product>> GetOnePrivateProduct(int id)
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
         {
-            var product = await _service.GetOnePrivateProductAsync(id);
-            if (product == null) return NotFound();
-            return Ok(product);
+            var products = await _service.GetAllProductsAsync();
+            return Ok(products);  // Can return a mix of PublicProduct and PrivateProduct
         }
 
+                // New endpoint to get all PublicProducts
         [HttpGet("public")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllPublicProducts()
         {
@@ -40,6 +40,7 @@ namespace DotNetParis.Controllers
             return Ok(products);
         }
 
+        // New endpoint to get all PrivateProducts
         [HttpGet("private")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllPrivateProducts()
         {
@@ -47,22 +48,11 @@ namespace DotNetParis.Controllers
             return Ok(products);
         }
 
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts()
-        {
-            var publicProducts = await _service.GetAllPublicProductsAsync();
-            var privateProducts = await _service.GetAllPrivateProductsAsync();
-            var allProducts = new List<Product>();
-            allProducts.AddRange(publicProducts);
-            allProducts.AddRange(privateProducts);
-            return Ok(allProducts);
-        }
-
         [HttpPost]
         public async Task<ActionResult> CreateProduct([FromBody] Product product)
         {
             await _service.CreateAsync(product);
-            return CreatedAtAction(nameof(GetOnePublicProduct), new { id = product.Id }, product);
+            return CreatedAtAction(nameof(GetOneProduct), new { id = product.Id }, product);
         }
 
         [HttpPut("{id}")]
@@ -76,10 +66,11 @@ namespace DotNetParis.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteProduct(int id)
         {
-            var product = await _service.GetOnePublicProductAsync(id) ?? await _service.GetOnePrivateProductAsync(id);
+            var product = await _service.GetOneProductAsync(id);
             if (product == null) return NotFound();
             await _service.DeleteAsync(product);
             return NoContent();
         }
     }
 }
+

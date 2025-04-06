@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DotNetParis.Data;
+using DotNetParis.Models;
 
 namespace DotNetParis.Repositories
 {
-    using DotNetParis.Models;
-
     public class ProductRepository
     {
         private readonly ApplicationDbContext _context;
@@ -15,38 +14,46 @@ namespace DotNetParis.Repositories
             _context = context;
         }
 
-        public async ValueTask<Product> GetByIdAsync(int productId)
+        // Get by Id, returns any subclass of Product
+        public async Task<Product> GetByIdAsync(int id)
         {
-            await Task.Delay(100); // Simulate async operation
-            return _context.Products.FirstOrDefault(p => p.Id == productId);
+            // Simulating asynchronous call
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            return await Task.FromResult(product); // Return any Product (including subtypes)
         }
 
-        public async ValueTask<IEnumerable<Product>> GetAllAsync()
+        // Get all products, returns any subclass of Product
+        public async Task<List<Product>> GetAllAsync()
         {
-            await Task.Delay(100); // Simulate async operation
-            return _context.Products;
+            // Simulating asynchronous call
+            return await Task.FromResult(_context.Products.ToList());
         }
 
-        public async ValueTask AddAsync(Product product)
+        public async Task AddAsync(Product product)
         {
-            await Task.Delay(100); // Simulate async operation
             _context.Products.Add(product);
+            await Task.CompletedTask;
         }
 
-        public async ValueTask UpdateAsync(Product product)
+        public async Task UpdateAsync(Product product)
         {
-            await Task.Delay(100); // Simulate async operation
             var existingProduct = _context.Products.FirstOrDefault(p => p.Id == product.Id);
             if (existingProduct != null)
             {
                 existingProduct.Name = product.Name;
             }
+            await Task.CompletedTask;
         }
 
-        public async ValueTask RemoveAsync(Product product)
+        public async Task RemoveAsync(Product product)
         {
-            await Task.Delay(100); // Simulate async operation
-            _context.Products.Remove(product);
+            var existingProduct = _context.Products.FirstOrDefault(p => p.Id == product.Id);
+            if (existingProduct != null)
+            {
+                _context.Products.Remove(existingProduct);
+            }
+            await Task.CompletedTask;
         }
     }
 }
+

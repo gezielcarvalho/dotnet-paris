@@ -3,14 +3,14 @@ using DotNetParis.Models;
 
 namespace DotNetParis.Data
 {
-    public class ApplicationDbContext // Remove inheritance from DbContext
+    public class ApplicationDbContext
     {
-        public List<Product> Products { get; set; } = new() // Use a simple in-memory list
+        public List<Product> Products { get; set; } = new()
         {
-            new Product(1, "Public Product 1"),
-            new Product(2, "Private Product 1"),
-            new Product(3, "Public Product 2"),
-            new Product(4, "Private Product 2")
+            new PublicProduct(1, "Public Product 1"),
+            new PrivateProduct(2, "Private Product 1"),
+            new PublicProduct(3, "Public Product 2"),
+            new PrivateProduct(4, "Private Product 2")
         };
     }
 }

@@ -12,4 +12,22 @@ namespace DotNetParis.Models
             Name = name;
         }
     }
+
+    // Derived classes to demonstrate LSP
+
+    public class PublicProduct : Product
+    {
+        public PublicProduct(int id, string name) : base(id, name)
+        {
+            // Public-specific behavior can be added here if needed
+        }
+    }
+
+    public class PrivateProduct : Product
+    {
+        public PrivateProduct(int id, string name) : base(id, name)
+        {
+            // Private-specific behavior can be added here if needed
+        }
+    }
 }
