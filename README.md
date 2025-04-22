@@ -11,8 +11,8 @@ Since the application runs inside a Docker container, the URLs need to listen on
 Use the following commands to start the application:
 
 ```bash
-dotnet run --urls="https://0.0.0.0:5151"
-dotnet watch --urls="https://0.0.0.0:5151"
+dotnet run --urls="http://0.0.0.0:5151"
+dotnet watch --urls="http://0.0.0.0:5151"
 ```
 
 ### Accessing the API

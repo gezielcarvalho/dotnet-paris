@@ -11,8 +11,8 @@ L'application s'exécute dans un conteneur Docker, et les URLs doivent écouter 
 Utilisez les commandes suivantes pour démarrer l'application :
 
 ```bash
-dotnet run --urls="https://0.0.0.0:5151"
-dotnet watch --urls="https://0.0.0.0:5151"
+dotnet run --urls="http://0.0.0.0:5151"
+dotnet watch --urls="http://0.0.0.0:5151"
 ```
 
 ### Accès à l'API
