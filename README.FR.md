@@ -34,6 +34,11 @@ L'API est exposée sur le port `5151` à l'intérieur du conteneur, qui est mapp
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Docker](https://www.docker.com/)
 - [Visual Studio Code](https://code.visualstudio.com/) (optionnel, pour le développement)
+- [Angular CLI](https://angular.io/cli) (installez-le globalement en utilisant la commande ci-dessous) :
+
+```bash
+npm install -g @angular/cli
+```
 
 ### Exécution en Mode Développement
 
