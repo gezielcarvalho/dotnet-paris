@@ -2,31 +2,41 @@ using DotNetParis.Services;
 using DotNetParis.Repositories;
 using DotNetParis.Data;
 
+// Creer le constructeur de la application
 var builder = WebApplication.CreateBuilder(args);
 
 // Ajouter les services à l'application.
-// En savoir plus sur la configuration de Swagger/OpenAPI : https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+// Ajouter le service de Swagger pour la documentation de l'API.
 builder.Services.AddSwaggerGen();
+
+// Ajouter les controleurs pour gérer les requêtes HTTP.
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<ProductService>(); // Register ProductService
-builder.Services.AddScoped<ProductRepository>(); // Register ProductRepository
-builder.Services.AddScoped<ApplicationDbContext>(); // Register ApplicationDbContext as a simple service
+// Ajouter les services de l'application ici.
+builder.Services.AddScoped<ProductService>(); 
+builder.Services.AddScoped<ProductRepository>(); 
+builder.Services.AddScoped<ApplicationDbContext>(); 
 
+// Construire l'application.
 var app = builder.Build();
 
 // Configurer le pipeline des requêtes HTTP.
 if (app.Environment.IsDevelopment())
 {
+    // Utiliser Swagger uniquement en mode développement.
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Utiliser le middleware de routage pour gérer les requêtes HTTP.
 app.UseHttpsRedirection();
 
+// Appliquer les routes pour les contrôleurs.
 app.MapControllers();
 
+// Démarrer l'application.
 app.Run();
 
 
