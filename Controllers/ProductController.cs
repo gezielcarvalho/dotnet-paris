@@ -32,7 +32,7 @@ namespace DotNetParis.Controllers
             return Ok(products);  // Can return a mix of PublicProduct and PrivateProduct
         }
 
-                // New endpoint to get all PublicProducts
+        // New endpoint to get all PublicProducts
         [HttpGet("public")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllPublicProducts()
         {
