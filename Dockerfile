@@ -1,22 +1,23 @@
-# Étape 1: Build de l'application Angular
-FROM node:20-alpine AS angular-build
-
-WORKDIR /app/ClientApp
-
-# Copier les fichiers package.json et installer les dépendances
-COPY ClientApp/package*.json ./
-RUN npm ci
-
-# Copier le reste des fichiers Angular et construire
-COPY ClientApp/ ./
-RUN npm run build
-
-# Étape 2: Build de l'application .NET
+# Étape 1: Build de l'application .NET avec Angular
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /src
 
+# Installer Node.js dans l'image .NET SDK
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copier et construire l'application Angular
+WORKDIR /app/ClientApp
+COPY ClientApp/package*.json ./
+RUN npm ci
+COPY ClientApp/ ./
+RUN npm run build
+
 # Copier le fichier csproj et restaurer les dépendances
+WORKDIR /src
 COPY ["DotNetParis.csproj", "./"]
 RUN dotnet restore "DotNetParis.csproj"
 
@@ -28,7 +29,7 @@ RUN dotnet build "DotNetParis.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "DotNetParis.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Étape 3: Image finale pour l'exécution
+# Étape 2: Image finale pour l'exécution
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
 WORKDIR /app
@@ -36,8 +37,8 @@ WORKDIR /app
 # Copier les fichiers publiés depuis l'étape de publication
 COPY --from=publish /app/publish .
 
-# Copier les fichiers Angular buildés (si nécessaire pour le front-end)
-COPY --from=angular-build /app/ClientApp/dist ./ClientApp/dist
+# Copier les fichiers Angular buildés depuis l'étape de build
+COPY --from=build /app/ClientApp/dist ./ClientApp/dist
 
 # Exposer le port de l'application
 EXPOSE 5151
