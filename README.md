@@ -340,8 +340,6 @@ Les variables suivantes sont configurables dans le `docker-compose.yml` :
 
 ### Mode développement avec Docker
 
-### Mode développement avec Docker
-
 Pour un développement avec rechargement automatique :
 
 ```bash
