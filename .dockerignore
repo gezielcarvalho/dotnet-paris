@@ -1,0 +1,57 @@
+# Fichiers et dossiers .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+.vs/
+.vscode/
+
+# Fichiers de build
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# Fichiers de publication
+publish/
+out/
+
+# Fichiers Node.js et Angular
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+.angular/
+
+# Fichiers de configuration locale
+appsettings.Development.json
+Properties/launchSettings.json
+
+# Fichiers de test
+coverage/
+*.trx
+TestResults/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Fichiers Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation et fichiers markdown (optionnel)
+README*.md
+docs/
+
+# Fichiers Docker (pour éviter la récursion)
+Dockerfile*
+docker-compose*.yml
+.dockerignore

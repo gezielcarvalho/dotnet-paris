@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  dotnet-paris-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dotnet-paris-api
+    ports:
+      - "5153:5151"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5151
+    volumes:
+      # Montage pour le développement (optionnel, à activer si nécessaire)
+      - ./appsettings.Development.json:/app/appsettings.Development.json:ro
+    networks:
+      - dotnet-paris-network
+    restart: unless-stopped
+
+networks:
+  dotnet-paris-network:
+    driver: bridge
