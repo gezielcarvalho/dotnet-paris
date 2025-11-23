@@ -1,8 +1,18 @@
-# DotNetParis API
+# DotNetParis API - Magasin Virtuel
 
-Ce projet est une application web API .NET 8.0 conçue pour démontrer des principes comme OCP (Open/Closed Principle) et LSP (Liskov Substitution Principle). Il inclut des endpoints pour gérer des produits et des prévisions météo.
+Ce projet est une application web API .NET 8.0 conçue pour démontrer **tous les principes SOLID** à travers la création d'un **magasin virtuel**. L'application implémente un système complet de e-commerce avec gestion de produits, panier d'achat, commandes, et paiements.
 
 > **Note** : Cette application est développée en parallèle de la lecture du livre "ASP.NET avec C# sous Visual Studio 2019" (Éditions ENI). La documentation et les commits sont en français, tandis que le code est en anglais.
+
+## 🎯 Objectif pédagogique
+
+Ce projet illustre concrètement les **cinq principes SOLID** dans le contexte d'un magasin virtuel :
+
+- **S** - Single Responsibility Principle (SRP)
+- **O** - Open/Closed Principle (OCP)
+- **L** - Liskov Substitution Principle (LSP)
+- **I** - Interface Segregation Principle (ISP)
+- **D** - Dependency Inversion Principle (DIP)
 
 ## 🐳 Exécution avec Docker (Recommandé)
 
@@ -68,39 +78,240 @@ dotnet run --urls="http://localhost:5151"
 dotnet watch --urls="http://localhost:5151"
 ```
 
-## ✨ Fonctionnalités
+## ✨ Fonctionnalités du magasin virtuel
 
-- **Gestion des produits** : Endpoints pour créer, récupérer, mettre à jour et supprimer des produits, incluant le filtrage par `PublicProduct` et `PrivateProduct`
-- **Prévisions météo** : Un endpoint simple pour récupérer des prévisions météo avec des données aléatoires
-- **Swagger/OpenAPI** : Interface Swagger UI intégrée pour l'exploration et les tests de l'API
-- **Architecture multi-couches** : Séparation claire entre Controllers, Services, Repositories et Models
-- **Conteneurisation** : Application entièrement dockerisée avec support Angular
+### Gestion des produits
+
+- Catalogue de produits avec catégories
+- Recherche et filtrage de produits
+- Gestion du stock et des prix
+- Produits publics et privés (membres premium)
+
+### Panier d'achat
+
+- Ajout/suppression d'articles
+- Calcul automatique des totaux
+- Application de remises et promotions
+- Persistance du panier
+
+### Système de commandes
+
+- Création et suivi de commandes
+- Historique des achats
+- Statuts de commande (en attente, traitée, expédiée, livrée)
+- Notifications par email
+
+### Paiements
+
+- Support de multiples méthodes de paiement
+- Validation de paiement
+- Gestion des remboursements
+- Intégration avec passerelles de paiement
+
+### Fonctionnalités techniques
+
+- **API RESTful** avec documentation Swagger/OpenAPI
+- **Architecture multi-couches** : Controllers, Services, Repositories, Models
+- **Conteneurisation** complète avec Docker
+- **Base de données** en mémoire (Entity Framework Core)
+- **Client Angular** pour l'interface utilisateur
 
 ## 🏗️ Structure du projet
 
 ```
 dotnet-paris/
-├── Controllers/           # Contrôleurs API (ProductController, WeatherController)
-├── Models/               # Modèles de données (Product, PublicProduct, PrivateProduct, Weather)
-├── Services/             # Couche de logique métier (ProductService)
-├── Repositories/         # Couche d'accès aux données (ProductRepository)
-├── Data/                 # Contexte de base de données en mémoire (ApplicationDbContext)
+├── Controllers/           # Contrôleurs API (Products, Orders, Cart, Payments)
+├── Models/               # Modèles de domaine
+│   ├── Products/         # Product, PublicProduct, PrivateProduct
+│   ├── Orders/           # Order, OrderItem, OrderStatus
+│   ├── Cart/             # ShoppingCart, CartItem
+│   └── Payments/         # Payment, PaymentMethod, Transaction
+├── Services/             # Couche de logique métier
+│   ├── ProductService
+│   ├── OrderService
+│   ├── CartService
+│   ├── PaymentService
+│   └── Interfaces/       # Contrats de services (ISP, DIP)
+├── Repositories/         # Couche d'accès aux données
+│   ├── ProductRepository
+│   ├── OrderRepository
+│   └── Interfaces/       # Contrats de repositories (DIP)
+├── Data/                 # Contexte de base de données
+├── Validators/           # Validation métier (SRP)
+├── Notifications/        # Service de notifications (SRP)
+├── Pricing/              # Stratégies de pricing (OCP)
 ├── ClientApp/            # Application Angular (front-end)
-├── docs/                 # Documentation (démos OCP/LSP)
+├── docs/                 # Documentation des principes SOLID
+│   ├── 01_SRP_examples.md
+│   ├── 02_OCP_examples.md
+│   ├── 03_LSP_examples.md
+│   ├── 04_ISP_examples.md
+│   └── 05_DIP_examples.md
 ├── Dockerfile            # Configuration Docker multi-stage
 ├── docker-compose.yml    # Orchestration des conteneurs
 └── .dockerignore         # Fichiers exclus du build Docker
 ```
 
-## 📚 Principes démontrés
+## 📚 Principes SOLID démontrés
 
-### Open/Closed Principle (OCP)
+### 🔹 S - Single Responsibility Principle (SRP)
 
-L'application démontre l'OCP en permettant l'ajout de nouvelles fonctionnalités (par exemple, le filtrage des produits par type) sans modifier le code existant. Pour plus de détails, consultez [docs/01_ocp_lsp_demos.md](docs/01_ocp_lsp_demos.md).
+**Principe** : Une classe ne devrait avoir qu'une seule raison de changer.
 
-### Liskov Substitution Principle (LSP)
+**Exemples dans le projet :**
 
-L'application respecte le LSP en garantissant que les sous-classes (`PublicProduct` et `PrivateProduct`) peuvent remplacer leur classe de base (`Product`) sans affecter la correction du programme.
+- `OrderValidator` : responsable uniquement de la validation des commandes
+- `EmailNotificationService` : responsable uniquement de l'envoi d'emails
+- `PriceCalculator` : responsable uniquement du calcul des prix
+- `StockManager` : responsable uniquement de la gestion du stock
+
+**Avantages** : Code plus maintenable, testable et réutilisable.
+
+### 🔹 O - Open/Closed Principle (OCP)
+
+**Principe** : Les entités logicielles doivent être ouvertes à l'extension mais fermées à la modification.
+
+**Exemples dans le projet :**
+
+- **Stratégies de pricing** : `IPricingStrategy`, `RegularPricing`, `PromotionalPricing`, `SeasonalPricing`
+- **Méthodes de paiement** : `IPaymentMethod`, `CreditCardPayment`, `PayPalPayment`, `CryptoPayment`
+- **Calculateurs de remise** : `IDiscountCalculator`, `PercentageDiscount`, `FixedAmountDiscount`, `BuyOneGetOneDiscount`
+- **Filtres de produits** : Extension du système de filtrage sans modifier le code existant
+
+**Avantages** : Ajout de nouvelles fonctionnalités sans risquer de casser l'existant.
+
+### 🔹 L - Liskov Substitution Principle (LSP)
+
+**Principe** : Les objets d'une classe dérivée doivent pouvoir remplacer les objets de la classe de base sans altérer le comportement du programme.
+
+**Exemples dans le projet :**
+
+- `Product` (classe de base) → `PublicProduct`, `PrivateProduct`, `DigitalProduct`
+- `PaymentMethod` (classe de base) → `CreditCard`, `DebitCard`, `PrepaidCard`
+- `ShippingMethod` → `StandardShipping`, `ExpressShipping`, `InternationalShipping`
+
+**Garanties** :
+
+- Toutes les sous-classes respectent le contrat de la classe de base
+- Les méthodes substituées ne lancent pas d'exceptions inattendues
+- Les pré-conditions ne sont pas renforcées
+- Les post-conditions ne sont pas affaiblies
+
+**Avantages** : Polymorphisme fiable et prévisible.
+
+### 🔹 I - Interface Segregation Principle (ISP)
+
+**Principe** : Les clients ne devraient pas être forcés de dépendre d'interfaces qu'ils n'utilisent pas.
+
+**Exemples dans le projet :**
+
+Au lieu d'une seule interface monolithique `IProductRepository` avec toutes les méthodes :
+
+```csharp
+// ❌ Mauvais : Interface trop large
+public interface IProductRepository
+{
+    Task<Product> GetById(int id);
+    Task<List<Product>> GetAll();
+    Task Create(Product product);
+    Task Update(Product product);
+    Task Delete(int id);
+    Task<List<Product>> Search(string query);
+    Task<List<Product>> GetByCategory(int categoryId);
+    Task UpdateStock(int productId, int quantity);
+    Task<decimal> GetAveragePrice();
+}
+```
+
+On utilise des interfaces ségrégées :
+
+```csharp
+// ✅ Bon : Interfaces séparées selon les besoins
+public interface IProductReader
+{
+    Task<Product> GetById(int id);
+    Task<List<Product>> GetAll();
+}
+
+public interface IProductWriter
+{
+    Task Create(Product product);
+    Task Update(Product product);
+    Task Delete(int id);
+}
+
+public interface IProductSearchable
+{
+    Task<List<Product>> Search(string query);
+    Task<List<Product>> GetByCategory(int categoryId);
+}
+
+public interface IStockManager
+{
+    Task UpdateStock(int productId, int quantity);
+}
+```
+
+**Autres exemples** :
+
+- `IOrderReader` vs `IOrderWriter` vs `IOrderProcessor`
+- `ICartReader` vs `ICartModifier`
+- `IPaymentProcessor` vs `IPaymentValidator` vs `IRefundHandler`
+
+**Avantages** : Classes clientes plus légères, dépendances minimales, meilleure testabilité.
+
+### 🔹 D - Dependency Inversion Principle (DIP)
+
+**Principe** : Les modules de haut niveau ne doivent pas dépendre des modules de bas niveau. Les deux doivent dépendre d'abstractions.
+
+**Exemples dans le projet :**
+
+```csharp
+// Les services dépendent d'abstractions, pas d'implémentations concrètes
+public class OrderService
+{
+    private readonly IOrderRepository _orderRepository;      // Abstraction
+    private readonly IPaymentProcessor _paymentProcessor;    // Abstraction
+    private readonly INotificationService _notificationService; // Abstraction
+
+    public OrderService(
+        IOrderRepository orderRepository,
+        IPaymentProcessor paymentProcessor,
+        INotificationService notificationService)
+    {
+        _orderRepository = orderRepository;
+        _paymentProcessor = paymentProcessor;
+        _notificationService = notificationService;
+    }
+}
+```
+
+**Configuration dans `Program.cs`** :
+
+```csharp
+// Injection de dépendances - les implémentations concrètes sont injectées
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IPaymentProcessor, StripePaymentProcessor>();
+builder.Services.AddScoped<INotificationService, EmailNotificationService>();
+builder.Services.AddScoped<OrderService>();
+```
+
+**Avantages** :
+
+- Facilite les tests unitaires (mock des dépendances)
+- Permet de changer d'implémentation sans modifier le code
+- Réduit le couplage entre les composants
+- Améliore la flexibilité et la maintenabilité
+
+### 📖 Documentation détaillée
+
+Pour des exemples de code complets et des explications approfondies, consultez la documentation dans le dossier `docs/` :
+
+- [01_SRP_examples.md](docs/01_SRP_examples.md) - Single Responsibility Principle
+- [02_OCP_examples.md](docs/02_OCP_examples.md) - Open/Closed Principle
+- [03_LSP_examples.md](docs/03_LSP_examples.md) - Liskov Substitution Principle
+- [04_ISP_examples.md](docs/04_ISP_examples.md) - Interface Segregation Principle
+- [05_DIP_examples.md](docs/05_DIP_examples.md) - Dependency Inversion Principle
 
 ## 🔧 Configuration Docker
 
@@ -278,14 +489,60 @@ dotnet publish -c Release -o ./publish
 
 Ce projet suit le livre **"ASP.NET avec C# sous Visual Studio 2019 - Conception et développement d'applications web"** par Brice-Arnaud GUÉRIN (Éditions ENI).
 
-### Table des matières suivie
+### Objectifs d'apprentissage
 
-Chapitres couverts dans ce projet :
+À travers le développement de ce **magasin virtuel**, vous apprendrez :
 
-1. Nouveautés de Visual Studio 2019
-2. La page de démarrage
-3. Les différentes solutions de développement
-   - [Et plus encore...]
+1. **Les principes SOLID** appliqués à un projet réel
+2. **Architecture en couches** (Presentation, Business, Data)
+3. **Patterns de conception** (Repository, Strategy, Factory, etc.)
+4. **Injection de dépendances** et inversion de contrôle
+5. **Tests unitaires** avec mocking des dépendances
+6. **API RESTful** avec ASP.NET Core
+7. **Entity Framework Core** pour l'accès aux données
+8. **Docker** et conteneurisation
+9. **Angular** pour le front-end
+10. **CI/CD** et bonnes pratiques DevOps
+
+### Progression du projet
+
+Le projet est développé de manière incrémentale, en ajoutant progressivement des fonctionnalités tout en respectant les principes SOLID :
+
+**Phase 1 : Fondations** (Chapitres 1-3)
+
+- Configuration du projet ASP.NET Core
+- Structure de base et architecture
+- Premiers contrôleurs et modèles
+
+**Phase 2 : Gestion des produits** (Chapitres 4-6)
+
+- Implémentation du catalogue produits
+- Démonstration de SRP et OCP
+- Filtres et recherche extensibles
+
+**Phase 3 : Panier et commandes** (Chapitres 7-9)
+
+- Système de panier d'achat
+- Gestion des commandes
+- Démonstration de LSP et ISP
+
+**Phase 4 : Paiements et notifications** (Chapitres 10-12)
+
+- Intégration de paiements
+- Service de notifications
+- Démonstration de DIP
+
+**Phase 5 : Tests et déploiement** (Chapitres 13-15)
+
+- Tests unitaires et d'intégration
+- Conteneurisation Docker
+- Déploiement et monitoring
+
+### Ressources supplémentaires
+
+- **Documentation officielle** : [ASP.NET Core](https://docs.microsoft.com/aspnet/core)
+- **Principes SOLID** : [SOLID Principles Explained](https://stackify.com/solid-design-principles/)
+- **Clean Architecture** : [Clean Architecture by Uncle Bob](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 ## 📝 Licence
 
