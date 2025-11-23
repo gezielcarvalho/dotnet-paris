@@ -8,11 +8,11 @@ Ce projet est une application web API .NET 8.0 conçue pour démontrer **tous le
 
 Ce projet illustre concrètement les **cinq principes SOLID** dans le contexte d'un magasin virtuel :
 
-- **S** - Single Responsibility Principle (SRP)
-- **O** - Open/Closed Principle (OCP)
-- **L** - Liskov Substitution Principle (LSP)
-- **I** - Interface Segregation Principle (ISP)
-- **D** - Dependency Inversion Principle (DIP)
+- **S** - Single Responsibility Principle (Principe de responsabilité unique)
+- **O** - Open/Closed Principle (Principe ouvert/fermé)
+- **L** - Liskov Substitution Principle (Principe de substitution de Liskov)
+- **I** - Interface Segregation Principle (Principe de ségrégation des interfaces)
+- **D** - Dependency Inversion Principle (Principe d'inversion des dépendances)
 
 ## 🐳 Exécution avec Docker (Recommandé)
 
