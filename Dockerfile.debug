@@ -1,0 +1,17 @@
+# Dockerfile pour le développement avec débogage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+WORKDIR /app
+EXPOSE 5151
+
+# Installer les outils de débogage
+RUN apt-get update && apt-get install -y unzip \
+    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+# Copier les fichiers du projet
+COPY . .
+
+# Restaurer les dépendances
+RUN dotnet restore
+
+# Point d'entrée pour le développement
+ENTRYPOINT ["dotnet", "run", "--urls=http://0.0.0.0:5151"]

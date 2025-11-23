@@ -16,19 +16,19 @@ Ce projet est une application web API .NET 8.0 conçue pour démontrer des princ
 Pour démarrer l'application avec Docker Compose :
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Pour reconstruire l'image et démarrer :
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Pour arrêter l'application :
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### Accéder à l'API
@@ -135,10 +135,10 @@ Pour un développement avec rechargement automatique :
 
 ```bash
 # Démarrer en mode développement
-docker-compose up
+docker compose up
 
 # Voir les logs en temps réel
-docker-compose logs -f dotnet-paris-api
+docker compose logs -f dotnet-paris-api
 ```
 
 ### Mode développement local
@@ -165,13 +165,85 @@ npm start
 
 Swagger est activé en environnement de développement. Pour explorer l'API, naviguez vers l'interface Swagger à l'URL mentionnée ci-dessus.
 
+## 🐛 Débogage avec VS Code
+
+### Prérequis pour le débogage
+
+Assurez-vous d'avoir installé les extensions VS Code recommandées :
+
+- **C# Dev Kit** (`ms-dotnettools.csdevkit`)
+- **C#** (`ms-dotnettools.csharp`)
+- **Docker** (`ms-azuretools.vscode-docker`)
+
+### Options de débogage disponibles
+
+Le projet offre trois configurations de débogage :
+
+#### 1. `.NET Core Launch (web)` - Débogage local (Recommandé)
+
+Lance l'application directement sans Docker. C'est la méthode la plus simple et rapide.
+
+**Comment l'utiliser :**
+
+1. Appuyez sur `F5` ou allez dans l'onglet "Run and Debug"
+2. Sélectionnez "`.NET Core Launch (web)`"
+3. L'application démarre et le navigateur s'ouvre automatiquement sur Swagger
+
+**Avantages :**
+
+- Démarrage rapide
+- Rechargement automatique avec hot reload
+- Points d'arrêt fonctionnels
+
+#### 2. `Docker .NET Launch` - Débogage dans Docker
+
+Lance l'application dans un conteneur Docker avec support de débogage.
+
+**Comment l'utiliser :**
+
+1. Sélectionnez "`Docker .NET Launch`" dans les configurations de débogage
+2. Appuyez sur `F5`
+3. VS Code construit l'image et attache le débogueur
+
+**Avantages :**
+
+- Environnement identique à la production
+- Teste la conteneurisation
+
+#### 3. `.NET Core Attach` - Attacher à un processus
+
+Permet de s'attacher à un processus .NET en cours d'exécution.
+
+**Comment l'utiliser :**
+
+1. Démarrez l'application (avec `dotnet run` ou Docker)
+2. Sélectionnez "`.NET Core Attach`"
+3. Choisissez le processus `DotNetParis` dans la liste
+
+### Points d'arrêt
+
+Pour ajouter un point d'arrêt :
+
+1. Cliquez dans la marge gauche d'une ligne de code (un point rouge apparaît)
+2. Lancez le débogage avec `F5`
+3. L'exécution s'arrêtera sur cette ligne
+
+### Raccourcis clavier de débogage
+
+- `F5` : Démarrer/Continuer le débogage
+- `F9` : Ajouter/Retirer un point d'arrêt
+- `F10` : Passer à l'instruction suivante (step over)
+- `F11` : Entrer dans la fonction (step into)
+- `Shift+F11` : Sortir de la fonction (step out)
+- `Shift+F5` : Arrêter le débogage
+
 ## 🐞 Commandes utiles
 
 ### Docker
 
 ```bash
 # Construire l'image sans cache
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # Voir les conteneurs en cours d'exécution
 docker ps
@@ -180,7 +252,7 @@ docker ps
 docker exec -it dotnet-paris-api /bin/bash
 
 # Nettoyer les conteneurs et volumes
-docker-compose down -v
+docker compose down -v
 
 # Voir l'utilisation des ressources
 docker stats dotnet-paris-api
